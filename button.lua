@@ -10,7 +10,6 @@ function Button:initialize(x,y,w,h,func)
   self.func = func
 end
 function Button:draw(tablelength)
-  self.x = menu.width
   if self.isMaxed  == false then
     if love.mouse.getX() >= self.x and
        love.mouse.getX() <= self.x + self.w and
@@ -19,7 +18,7 @@ function Button:draw(tablelength)
     then--draw pressed button if cursor is over button
       self.c = {0.8,0.8,0.8}
       if love.mouse.isDown(1) then
-        self.func
+        self.func()
       end
     else--draw unpressed button
       self.c = {1,1,1}
@@ -29,8 +28,8 @@ function Button:draw(tablelength)
   end
   love.graphics.setColor(self.c)
   love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
-  love.graphics.printf(self.text, self.x + 10, self.y + 10, self.w - 15, "left")
-  love.graphics.print(self.price, self.x + 10, self.y + 40)
+  -- love.graphics.printf(self.text, self.x + 10, self.y + 10, self.w - 15, "left")
+  -- love.graphics.print(self.price, self.x + 10, self.y + 40)
   love.graphics.setColor(1,1,1)
 end
 
