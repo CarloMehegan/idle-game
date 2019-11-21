@@ -12,7 +12,8 @@ function Button:initialize(x,y,w,h,name,clicktype,func)
   self.clicktype = clicktype
   self.leftdown = true
 end
-function Button:draw(tablelength)
+
+function Button:draw()
   if self.isMaxed  == false then
     if love.mouse.getX() >= self.x and
        love.mouse.getX() <= self.x + self.w and
@@ -37,7 +38,7 @@ function Button:draw(tablelength)
           self.func()
         end
       end
-
+      
     else--draw unpressed button
       self.c = {1,1,1}
     end
