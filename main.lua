@@ -23,26 +23,53 @@ function love.load()
   buttons = {}
   cooldowns = {}
 
-  buttons["make_axolotl"] = Button:new(475, 40, 100, 50, "make axolotl", "single", function()
+  buttons["make_axolotl"] = Button:new(475, 80, 100, 50, "make axolotl", "10 energy", "single", function()
     if energy >= 10 then
-      table.insert(messages, Msg:new("happy birthday!", 475,30))
+      table.insert(messages, Msg:new("happy birthday!", 475,70))
       axolotls = axolotls + 1
       energy = energy - 10
     elseif energy < 10 then
-      table.insert(messages, Msg:new("insufficient energy!", 475, 30))
+      table.insert(messages, Msg:new("insufficient energy!", 475, 65, 0, 0))
     end
   end)
 
-  cooldowns["find_food"] = Cooldown:new(330, 40, 100, 50, "find food", 3, function()
+  buttons["test"] = Button:new(475, 500, 100, 50, "test", "50 energy", "single", function()
+    if energy >= 10 then
+      table.insert(messages, Msg:new("happy birthday!", 475,70))
+      axolotls = axolotls + 1
+      energy = energy - 10
+    elseif energy < 10 then
+      table.insert(messages, Msg:new("insufficient energy!", 475, 65, 0, 0))
+    end
+  end)
+
+  buttons["upgrade_axo_lv2"] = Button:new(475, 165, 100, 50, "upgrade axolotl", "50 energy", "single", function()
+    if axolotls >= 1 and energy >= 50 then
+      table.insert(messages, Msg:new("swole!", 475,150))
+      axolotls = axolotls - 1
+      energy = energy - 50
+    elseif axolotls < 1 then
+      table.insert(messages, Msg:new("insufficient axolotls!", 475, 150, 0, 0))
+    elseif energy < 50 then
+      table.insert(messages, Msg:new("insufficient energy!", 475, 150, 0, 0))
+    end
+  end)
+
+  cooldowns["find_food"] = Cooldown:new(330, 165, 100, 50, "find food", 3, function()
     local found = love.math.random(2, 5)
     food = food + found
-    table.insert(messages, Msg:new("found "..found.." food!", 330,30))
+    table.insert(messages, Msg:new("found "..found.." worms!", 330, 155))
+  end)
+
+  cooldowns["make_energy"] = Cooldown:new(330, 80, 100, 50, "photosynthesize", 0.2, function()
+    energy = energy + 5
+    table.insert(messages, Msg:new("energy gained!", 330, 70))
   end)
 
 end
 
 function love.update(dt)
-  energy = energy + (5 * dt)
+  -- energy = energy + (1 * dt)
   for k,v in pairs(messages) do
     messages[k]:update(dt)
   end

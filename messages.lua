@@ -2,13 +2,13 @@ local class = require 'middleclass'
 
 Msg = class('Msg')
 
-function Msg:initialize(text, x, y)
+function Msg:initialize(text, x, y, dx, dy)
   self.text = text
   self.x = x
   self.y = y
   self.a = 1
-  self.dx = love.math.random(-100, 100)/100
-  self.dy = love.math.random(-100, -20)/100
+  self.dx = dx or love.math.random(-100, 100)/100
+  self.dy = dy or love.math.random(-100, -20)/100
   self.alive = true
 end
 
