@@ -54,7 +54,7 @@ function Cooldown:draw()
   love.graphics.setColor(self.c)
   love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
   if self.cooling == true then
-    -- self.c = {0.5, 0.5, 0.5}
+    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.rectangle("fill", self.x, self.y, self.w*math.min((self.cooltime/self.cooltimemax),1), self.h)
     love.graphics.setColor(0,0,0)
     love.graphics.printf(self.name, self.x + 10, self.y + 10, self.w - 15, "left")
