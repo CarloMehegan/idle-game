@@ -161,20 +161,37 @@ function love.draw()
   love.graphics.setFont(menufont)
   love.graphics.print("resources", 30, 20,0,2)
   love.graphics.line(0, 60, 2000, 60)
-  love.graphics.printf("energy: " .. math.floor(energy), 30, 80, 100, "left", 0,1)
-  -- love.graphics.printf(text, x, y, limit, align, r, sx, sy, ox, oy, kx, ky)
-  love.graphics.print("food: " .. food, 30, 140,0,2)
-  if axolotls > 0 then love.graphics.print("axolotls: " .. axolotls, 30, 200,0,2) end
-  if fennecs > 0 then love.graphics.print("fennecs: " .. fennecs, 30, 260,0,2) end
-  if pangolins > 0 then love.graphics.print("pangolins: " .. pangolins, 30, 320,0,2) end
-  if kittens > 0 then love.graphics.print("kittens: " .. kittens, 30, 380,0,2) end
-  if otters > 0 then love.graphics.print("otters: " .. otters, 30, 440,0,2) end
-  if seals > 0 then love.graphics.print("seals: " .. seals, 30, 500,0,2) end
-  if hippos > 0 then love.graphics.print("hippos: " .. hippos, 30, 560,0,2) end
-  if pandas > 0 then love.graphics.print("pandas: " .. pandas, 30, 620,0,2) end
+
+  -- love.graphics.printf("energy: " .. math.floor(energy), 30, 80, 125, "left", 0,1.8)
+  -- love.graphics.print("food: " .. food, 30, 170,0,2)
+  -- if axolotls > 0 then love.graphics.print("axolotls: " .. axolotls, 30, 200,0,2) end
+  -- if fennecs > 0 then love.graphics.print("fennecs: " .. fennecs, 30, 260,0,2) end
+  -- if pangolins > 0 then love.graphics.print("pangolins: " .. pangolins, 30, 320,0,2) end
+  -- if kittens > 0 then love.graphics.print("kittens: " .. kittens, 30, 380,0,2) end
+  -- if otters > 0 then love.graphics.print("otters: " .. otters, 30, 440,0,2) end
+  -- if seals > 0 then love.graphics.print("seals: " .. seals, 30, 500,0,2) end
+  -- if hippos > 0 then love.graphics.print("hippos: " .. hippos, 30, 560,0,2) end
+  -- if pandas > 0 then love.graphics.print("pandas: " .. pandas, 30, 620,0,2) end
+  love.graphics.printf(
+    "energy: " .. math.floor(energy)
+    .."\n\nfood: " .. math.floor(food)
+    .."\n\naxolotls: " .. axolotls
+    .."\n\nfennecs: " .. fennecs
+    .."\n\npangolins: " .. pangolins
+    .."\n\nkittens: " .. kittens
+    .."\n\notters: " .. otters
+    .."\n\nseals: " .. seals
+    .."\n\nhippos: " .. hippos
+    .."\n\npandas: " .. pandas
+  , 30, 80, 125, "left", 0,1.8)
+
   love.graphics.line(300, 0, 300, 1200)
   love.graphics.print("gather", 330, 20,0,2)
   love.graphics.print("make", 485, 20,0,2)
+  love.graphics.line(605, 0, 610, 1200)
+  love.graphics.print("contract", 640, 20,0,2)
+  love.graphics.line(608, 350, 2000, 350)
+
 
   local mx, my = love.mouse.getPosition()
   love.graphics.print(mx .. ", " .. my, mx, my+20)
