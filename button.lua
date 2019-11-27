@@ -49,7 +49,13 @@ function Button:draw()
   love.graphics.setColor(self.c)
   love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
   love.graphics.setColor(0,0,0)
-  love.graphics.printf(self.name, self.x + 10, self.y + 10, self.w - 15, "left")
+
+  if self.name == "+" or self.name == "-" then
+    love.graphics.printf(self.name, self.x, self.y + 2, self.w, "center")
+  else
+    love.graphics.printf(self.name, self.x + 10, self.y + 10, self.w - 15, "left")
+  end
+
   love.graphics.setColor(1,1,1)
   love.graphics.print(self.pricelabel, self.x, self.y + self.h + 5)
   love.graphics.setColor(1,1,1)

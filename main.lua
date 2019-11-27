@@ -17,7 +17,7 @@ function love.load()
     "123456789.,!?-+/():;%&`'*#=[]\"")
   buttonfont = love.graphics.newFont("nimbusmono-regular.otf", 15)
 
-  energy = 1000
+  energy = 0
   food = 0
   axolotls = 0
   fennecs = 0
@@ -126,8 +126,51 @@ function love.load()
     energy = energy + 5
     table.insert(messages, Msg:new("energy gained!", enx, eny-10))
   end)
-  for i=1,10 do
-    table.insert(workers, Worker:new("mars", "energy", 10))
+
+  worker_ids = {
+    "axo_worker",
+    "fen_worker",
+    "pan_worker",
+    "cat_worker",
+    "ott_worker",
+    "sea_worker",
+    "hip_worker",
+    "gia_worker"
+  }
+  worker_costs = {
+    10, 50, 100, 300, 1000, 4500, 9000, 120000
+  }
+  worker_animals = {
+    "axolotls",
+    "fennecs",
+    "pangolins",
+    "kittens",
+    "otters",
+    "seals",
+    "hippos",
+    "leopards",
+    "tigers",
+    "pandas"
+  }
+  worker_strength = {
+    10, 50, 100, 300, 1000, 4500, 9000, 120000
+  }
+
+  for i=1,8 do
+    local x = 660
+    local y = 76 + 34*(i-1)
+
+    buttons[worker_ids[i]] = Button:new(x, y, 15, 15, "+", "", "single", function()
+      local cost = worker_costs[i]
+      if food >= cost then
+        table.insert(messages, Msg:new("new worker!", x+22, y+2))
+        table.insert(workers, Worker:new(worker_animals[i], "energy", worker_strength[i]))
+        food = food - cost
+      elseif food < cost then
+        table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+      end
+    end)
+
   end
 
 end
@@ -144,6 +187,8 @@ function love.update(dt)
     workers[k]:update()
     if v.job == "energy" then
       energy = energy + (v.strength * dt)
+    elseif v.job == "food" then
+      food = food + (v.strength * dt)
     end
   end
 
@@ -166,19 +211,22 @@ function love.draw()
   love.graphics.print("resources", 30, 20,0,2)
   love.graphics.line(0, 60, 2000, 60)
 
-  -- love.graphics.printf("energy: " .. math.floor(energy), 30, 80, 125, "left", 0,1.8)
-  -- love.graphics.print("food: " .. food, 30, 170,0,2)
-  -- if axolotls > 0 then love.graphics.print("axolotls: " .. axolotls, 30, 200,0,2) end
-  -- if fennecs > 0 then love.graphics.print("fennecs: " .. fennecs, 30, 260,0,2) end
-  -- if pangolins > 0 then love.graphics.print("pangolins: " .. pangolins, 30, 320,0,2) end
-  -- if kittens > 0 then love.graphics.print("kittens: " .. kittens, 30, 380,0,2) end
-  -- if otters > 0 then love.graphics.print("otters: " .. otters, 30, 440,0,2) end
-  -- if seals > 0 then love.graphics.print("seals: " .. seals, 30, 500,0,2) end
-  -- if hippos > 0 then love.graphics.print("hippos: " .. hippos, 30, 560,0,2) end
-  -- if pandas > 0 then love.graphics.print("pandas: " .. pandas, 30, 620,0,2) end
+  --these numbers get big, so once theyre over 1M, we use scientific notation
+  if energy > 1000000 then
+    formattedenergy = string.format("energy: %.3e", energy)
+  else
+    formattedenergy = "energy: " .. math.floor(energy)
+  end
+  if food > 1000000 then
+    formattedfood = string.format("food: %.3e", food)
+  else
+    formattedfood = "food: " .. math.floor(food)
+  end
+
+  -- for the resources panel
   love.graphics.printf(
-    "energy: " .. math.floor(energy)
-    .."\n\nfood: " .. math.floor(food)
+    "" .. formattedenergy
+    .."\n\n" .. formattedfood
     .."\n\naxolotls: " .. axolotls
     .."\n\nfennecs: " .. fennecs
     .."\n\npangolins: " .. pangolins
@@ -189,15 +237,16 @@ function love.draw()
     .."\n\npandas: " .. pandas
   , 30, 80, 125, "left", 0,1.8)
 
+  --for the contract panel
   love.graphics.printf(
-    "axolotls: " .. axolotls
-    .."\n\nfennecs: " .. fennecs
-    .."\n\npangolins: " .. pangolins
-    .."\n\nkittens: " .. kittens
-    .."\n\notters: " .. otters
-    .."\n\nseals: " .. seals
-    .."\n\nhippos: " .. hippos
-    .."\n\npandas: " .. pandas
+    "axo: "
+    .."\n\nfen: "
+    .."\n\npan: "
+    .."\n\ncat: "
+    .."\n\nott: "
+    .."\n\nsea: "
+    .."\n\nhip: "
+    .."\n\ngia: "
   , 620, 75, 125, "left", 0,1)
 
   love.graphics.line(300, 0, 300, 1200)

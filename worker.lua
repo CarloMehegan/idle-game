@@ -10,23 +10,24 @@ function Worker:initialize(type, job, strength)
   self.s = 1
   self.w = 32 * self.s
   self.h = 32 * self.s
-  self.x = love.math.random(765, 1195 - self.w)
+  self.x = love.math.random(690, 1195 - self.w)
   self.y = love.math.random(65, 345 - self.h)
   self.dx = love.math.random(1,2)
   if self.dx == 2 then self.dx = -1 end
   self.dy = love.math.random(-1,1)
   if self.dy == 2 then self.dy = -1 end
+  self.speed = love.math.random(80,120)/100
 end
 
 function Worker:update()
-  self.x = self.x + self.dx
-  self.y = self.y + self.dy
-  if self.x < 765 then
-    self.x = 765
+  self.x = self.x + self.dx*self.speed
+  self.y = self.y + self.dy*self.speed
+  if self.x < 690 then
+    self.x = 690
     self.dx = -self.dx
   end
-  if self.x + self.w > 1195 then
-    self.x = 1195 - self.w
+  if self.x + self.w > love.graphics.getWidth() - 5 then
+    self.x = love.graphics.getWidth() - 5 - self.w
     self.dx = -self.dx
   end
   if self.y < 65 then
