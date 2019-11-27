@@ -14,7 +14,7 @@ function Worker:initialize(type, job, strength)
   self.y = love.math.random(65, 345 - self.h)
   self.dx = love.math.random(1,2)
   if self.dx == 2 then self.dx = -1 end
-  self.dy = love.math.random(-1,1)
+  self.dy = love.math.random(1,2)
   if self.dy == 2 then self.dy = -1 end
   self.speed = love.math.random(80,120)/100
 end
