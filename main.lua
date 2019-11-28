@@ -17,8 +17,8 @@ function love.load()
     "123456789.,!?-+/():;%&`'*#=[]\"")
   buttonfont = love.graphics.newFont("nimbusmono-regular.otf", 15)
 
-  energy = 0
-  food = 0
+  energy = 100000000000000000000
+  food = 100000000000000000000
   axolotls = 0
   fennecs = 0
   pangolins = 0
@@ -141,16 +141,14 @@ function love.load()
     10, 50, 100, 300, 1000, 4500, 9000, 120000
   }
   worker_animals = {
-    "axolotls",
-    "fennecs",
-    "pangolins",
-    "kittens",
-    "otters",
-    "seals",
-    "hippos",
-    "leopards",
-    "tigers",
-    "pandas"
+    "axolotl",
+    "fennec",
+    "pangolin",
+    "kitten",
+    "otter",
+    "seal",
+    "hippo",
+    "panda"
   }
   worker_strength = {
     10, 50, 100, 300, 1000, 4500, 9000, 120000
@@ -202,8 +200,11 @@ function love.draw()
   for k,v in pairs(cooldowns) do
     cooldowns[k]:draw()
   end
+
+  love.graphics.setFont(menufont)
+  local mx, my = love.mouse.getPosition()
   for k,v in pairs(workers) do
-    workers[k]:draw()
+    workers[k]:draw(mx,my)
   end
 
   love.graphics.setColor(1, 1, 1, 1)
@@ -257,8 +258,8 @@ function love.draw()
   love.graphics.line(608, 350, 2000, 350)
 
 
-  local mx, my = love.mouse.getPosition()
-  love.graphics.print(mx .. ", " .. my, mx, my+20)
+  -- local mx, my = love.mouse.getPosition()
+  -- love.graphics.print(mx .. ", " .. my, mx, my+20)
 
   love.graphics.setFont(buttonfont)
   for k,v in pairs(messages) do

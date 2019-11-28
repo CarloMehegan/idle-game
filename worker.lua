@@ -40,8 +40,16 @@ function Worker:update()
   end
 end
 
-function Worker:draw()
+function Worker:draw(mx,my)
   love.graphics.draw(self.img, self.x, self.y, 0, self.s)
+  if mx > self.x and
+    mx < self.x + self.w and
+    my > self.y and
+    my < self.y + self.h
+  then
+    love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+    love.graphics.print(self.type, mx, my + 20)
+  end
 end
 
 return Worker
