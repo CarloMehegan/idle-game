@@ -253,13 +253,17 @@ function love.draw()
   love.graphics.line(300, 0, 300, 1200)
   love.graphics.print("gather", 330, 20,0,2)
   love.graphics.print("make", 485, 20,0,2)
-  love.graphics.line(605, 0, 610, 1200)
-  love.graphics.print("contract", 640, 20,0,2)
-  love.graphics.line(608, 350, 2000, 350)
+  love.graphics.line(605, 0, 605, 1200)
+  love.graphics.print("contract", 630, 20,0,2)
+  love.graphics.line(606, 350, 2000, 350)
+  love.graphics.print("energy", 620, 370,0,2)
+  love.graphics.line(902, 350, 902, 1200)
+  love.graphics.print("food", 917, 370,0,2)
+  love.graphics.line(1205, 350, 1205, 1200)
 
 
-  -- local mx, my = love.mouse.getPosition()
-  -- love.graphics.print(mx .. ", " .. my, mx, my+20)
+  local mx, my = love.mouse.getPosition()
+  love.graphics.print(mx .. ", " .. my, mx, my+20)
 
   love.graphics.setFont(buttonfont)
   for k,v in pairs(messages) do
