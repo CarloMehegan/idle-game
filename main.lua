@@ -21,8 +21,8 @@ function love.load()
   isLeftDown = false
   newClick = false
 
-  energy = 10000
-  food = 1000
+  energy = 0
+  food = 0
   producingenergy = 0
   producingfood = 0
   axolotls = 0
@@ -160,14 +160,14 @@ function love.load()
     10, 50, 100, 300, 1000, 4500, 9000, 120000
   }
   worker_colors = {
-    {1,0,0},
-    {1,0.5,0},
-    {1,1,0},
-    {0,1,0},
-    {0,1,1},
-    {0,0,1},
-    {0.5,0,1},
-    {1,0,1}
+    {1,0,0,0.9},
+    {1,0.5,0,0.9},
+    {1,1,0,0.9},
+    {0,1,0,0.9},
+    {0,1,1,0.9},
+    {0,0,1,0.9},
+    {0.5,0,1,0.9},
+    {1,0,1,0.9}
   }
 
   for i=1,8 do -- make + buttons
@@ -292,8 +292,8 @@ function love.draw()
   end
   love.graphics.line(1205, 350, 1205, 1200)
 
-  local mx, my = love.mouse.getPosition()
-  love.graphics.print(mx .. ", " .. my, mx, my+20)
+  -- local mx, my = love.mouse.getPosition()
+  -- love.graphics.print(mx .. ", " .. my, mx, my+20)
 
   love.graphics.setFont(buttonfont)
   for k,v in pairs(messages) do
