@@ -17,6 +17,10 @@ function love.load()
     "123456789.,!?-+/():;%&`'*#=[]\"")
   buttonfont = love.graphics.newFont("nimbusmono-regular.otf", 15)
 
+  lastLeftDown = false
+  isLeftDown = false
+  newClick = false
+
   energy = 100000000000000000000
   food = 100000000000000000000
   axolotls = 0
@@ -154,10 +158,9 @@ function love.load()
     10, 50, 100, 300, 1000, 4500, 9000, 120000
   }
 
-  for i=1,8 do
+  for i=1,8 do -- make + buttons
     local x = 660
     local y = 76 + 34*(i-1)
-
     buttons[worker_ids[i]] = Button:new(x, y, 15, 15, "+", "", "single", function()
       local cost = worker_costs[i]
       if food >= cost then
@@ -168,12 +171,18 @@ function love.load()
         table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
       end
     end)
-
   end
 
 end
 
 function love.update(dt)
+  lastLeftDown = isLeftDown
+  isLeftDown = love.mouse.isDown(1)
+  if lastLeftDown == false and isLeftDown == true then
+    newClick = true
+  else
+    newClick = false
+  end
 
   for k,v in pairs(messages) do
     messages[k]:update(dt)
@@ -182,7 +191,7 @@ function love.update(dt)
     cooldowns[k]:update(dt)
   end
   for k,v in pairs(workers) do
-    workers[k]:update()
+    workers[k]:update(newClick)
     if v.job == "energy" then
       energy = energy + (v.strength * dt)
     elseif v.job == "food" then
@@ -260,7 +269,6 @@ function love.draw()
   love.graphics.line(902, 350, 902, 1200)
   love.graphics.print("food", 917, 370,0,2)
   love.graphics.line(1205, 350, 1205, 1200)
-
 
   local mx, my = love.mouse.getPosition()
   love.graphics.print(mx .. ", " .. my, mx, my+20)

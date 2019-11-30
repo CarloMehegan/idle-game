@@ -21,9 +21,19 @@ function Worker:initialize(type, job, strength)
   self.isWorking = false
 end
 
-function Worker:update()
+function Worker:update(isNewClick)
+  local mx, my = love.mouse.getPosition()
+
+  if mx > self.x and
+    mx < self.x + self.w and
+    my > self.y and
+    my < self.y + self.h and
+    isNewClick
+  then
+    self.isGrabbed = true
+  end
+
   if self.isGrabbed then
-    local mx, my = love.mouse.getPosition()
     self.x = mx
     self.y = my
     if love.mouse.isDown(1) == false then
@@ -67,9 +77,6 @@ function Worker:draw(mx,my)
   then
     love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
     love.graphics.print(self.type, mx, my + 20)
-    if love.mouse.isDown(1) then
-      self.isGrabbed = true
-    end
   end
 end
 
