@@ -34,19 +34,28 @@ function Worker:update(isNewClick)
   end
 
   if self.isGrabbed then
-    self.x = mx
-    self.y = my
+    self.x = mx - self.w/2
+    self.y = my - self.h/2
     if love.mouse.isDown(1) == false then
       self.isGrabbed = false
       if self.y > 350 and self.x > 605 then
         self.isWorking = true
       end
     end
-  elseif self.isWorking then
+
+
+  elseif self.isWorking then -- working pools
     if self.y < 345 or self.x < 605 then
       self.isWorking = false
+      self.job = ""
     end
-  else
+    if self.y > 345 and self.x > 605 and self.x < 902 then
+      self.job = "energy"
+    elseif self.y > 345 and self.x > 902 and self.x < 1200 then
+      self.job = "food"
+    end
+
+  else -- in contract pool
     self.x = self.x + self.dx*self.speed
     self.y = self.y + self.dy*self.speed
     if self.x < 690 then

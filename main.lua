@@ -21,8 +21,10 @@ function love.load()
   isLeftDown = false
   newClick = false
 
-  energy = 100000000000000000000
-  food = 100000000000000000000
+  energy = 10000
+  food = 1000
+  producingenergy = 0
+  producingfood = 0
   axolotls = 0
   fennecs = 0
   pangolins = 0
@@ -165,7 +167,7 @@ function love.load()
       local cost = worker_costs[i]
       if food >= cost then
         table.insert(messages, Msg:new("new worker!", x+22, y+2))
-        table.insert(workers, Worker:new(worker_animals[i], "energy", worker_strength[i]))
+        table.insert(workers, Worker:new(worker_animals[i], "", worker_strength[i]))
         food = food - cost
       elseif food < cost then
         table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
@@ -190,11 +192,15 @@ function love.update(dt)
   for k,v in pairs(cooldowns) do
     cooldowns[k]:update(dt)
   end
+  producingenergy = 0
+  producingfood = 0
   for k,v in pairs(workers) do
     workers[k]:update(newClick)
     if v.job == "energy" then
+      producingenergy = producingenergy + v.strength
       energy = energy + (v.strength * dt)
     elseif v.job == "food" then
+      producingfood = producingfood + v.strength
       food = food + (v.strength * dt)
     end
   end
@@ -266,8 +272,14 @@ function love.draw()
   love.graphics.print("contract", 630, 20,0,2)
   love.graphics.line(606, 350, 2000, 350)
   love.graphics.print("energy", 620, 370,0,2)
+  if producingenergy > 0 then
+      love.graphics.print("producing " .. producingenergy .. " energy/sec", 620, 410,0,1)
+  end
   love.graphics.line(902, 350, 902, 1200)
   love.graphics.print("food", 917, 370,0,2)
+  if producingfood > 0 then
+      love.graphics.print("producing " .. producingfood .. " food/sec", 917, 410,0,1)
+  end
   love.graphics.line(1205, 350, 1205, 1200)
 
   local mx, my = love.mouse.getPosition()
