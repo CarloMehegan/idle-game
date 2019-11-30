@@ -2,10 +2,11 @@ local class = require 'middleclass'
 
 Worker = class('Worker')
 
-function Worker:initialize(type, job, strength)
+function Worker:initialize(type, job, strength, color)
   self.strength = strength
   self.job = job
   self.type = type
+  self.color = color
   self.img = love.graphics.newImage("sprites/Mars Background - Copy.png")
   self.s = 1
   self.w = 32 * self.s
@@ -78,12 +79,15 @@ function Worker:update(isNewClick)
 end
 
 function Worker:draw(mx,my)
-  love.graphics.draw(self.img, self.x, self.y, 0, self.s)
+  love.graphics.setColor(self.color)
+  -- love.graphics.draw(self.img, self.x, self.y, 0, self.s)
+  love.graphics.circle("line", self.x + self.w/2, self.y + self.h/2, 16)
   if mx > self.x and
     mx < self.x + self.w and
     my > self.y and
     my < self.y + self.h
   then
+    love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
     love.graphics.print(self.type, mx, my + 20)
   end

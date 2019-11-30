@@ -159,6 +159,16 @@ function love.load()
   worker_strength = {
     10, 50, 100, 300, 1000, 4500, 9000, 120000
   }
+  worker_colors = {
+    {1,0,0},
+    {1,0.5,0},
+    {1,1,0},
+    {0,1,0},
+    {0,1,1},
+    {0,0,1},
+    {0.5,0,1},
+    {1,0,1}
+  }
 
   for i=1,8 do -- make + buttons
     local x = 660
@@ -167,7 +177,7 @@ function love.load()
       local cost = worker_costs[i]
       if food >= cost then
         table.insert(messages, Msg:new("new worker!", x+22, y+2))
-        table.insert(workers, Worker:new(worker_animals[i], "", worker_strength[i]))
+        table.insert(workers, Worker:new(worker_animals[i], "", worker_strength[i], worker_colors[i]))
         food = food - cost
       elseif food < cost then
         table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
