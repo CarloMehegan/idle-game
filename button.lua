@@ -63,6 +63,18 @@ function Button:draw()
       love.graphics.print("need " .. self.pricelabel .. " food", self.x + 22, self.y + 2)
       love.graphics.print("need " .. self.pricelabel .. " food", self.x + 22, self.y + 2)
     end
+  elseif self.name == "?" then
+    love.graphics.printf(self.name, self.x, self.y + 2, self.w, "center")
+    mx, my = love.mouse.getPosition()
+    if mx >= self.x and
+       mx <= self.x + self.w and
+       my >= self.y and
+       my <= self.y + self.h
+    then
+      love.graphics.setColor(1,1,1)
+      love.graphics.print("press for help", self.x + 22, self.y + 2)
+      -- love.graphics.print("need " .. self.pricelabel .. " food", self.x + 22, self.y + 2)
+    end
   else
     love.graphics.printf(self.name, self.x + 10, self.y + 10, self.w - 15, "left")
     love.graphics.setColor(1,1,1)

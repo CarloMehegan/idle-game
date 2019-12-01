@@ -21,9 +21,10 @@ function love.load()
   lastLeftDown = false
   isLeftDown = false
   newClick = false
+  showContractHelp = false
 
-  energy = 30
-  food = 30
+  energy = 100
+  food = 150
   producingenergy = 0
   producingfood = 0
   axolotls = 0
@@ -262,6 +263,16 @@ function love.load()
     end
   end)
 
+  local prompt = "click for help"
+  local x, y = 785, 28
+  buttons["contract_help"] = Button:new(x, y, 15, 15, "?", "", "single", function()
+    if showContractHelp == false then
+      showContractHelp = true
+    elseif showContractHelp == true then
+      showContractHelp = false
+    end
+  end)
+
 end
 
 function love.update(dt)
@@ -284,11 +295,11 @@ function love.update(dt)
   for k,v in pairs(workers) do
     workers[k]:update(newClick)
     if v.job == "energy" then
-      producingenergy = producingenergy + v.strength
-      energy = energy + (v.strength * dt)
+      producingenergy = producingenergy + v.strength*8
+      energy = energy + (v.strength*8 * dt)
     elseif v.job == "food" then
-      producingfood = producingfood + v.strength/4
-      food = food + (v.strength/4 * dt)
+      producingfood = producingfood + v.strength*2
+      food = food + (v.strength*2 * dt)
     end
   end
 
@@ -369,10 +380,14 @@ function love.draw()
   end
   love.graphics.line(1205, 350, 1205, 1200)
 
+love.graphics.setFont(buttonfont)
+  if showContractHelp then
+    love.graphics.printf("This is where you hire animals to help you. Once hired, drag them into the energy or food columns to assign them to those jobs. Animals left roaming with no jobs will aid you when you manually gather resources.", 800, 75, 200)
+  end
+
   -- local mx, my = love.mouse.getPosition()
   -- love.graphics.print(mx .. ", " .. my, mx, my+20)
 
-  love.graphics.setFont(buttonfont)
   for k,v in pairs(messages) do
     messages[k]:draw()
   end
