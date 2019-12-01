@@ -2,7 +2,7 @@ local class = require 'middleclass'
 
 Cooldown = class('Cooldown') -- for buttons with cooldowns
 
-function Cooldown:initialize(x,y,w,h,name,cooltimemax,func)
+function Cooldown:initialize(x,y,w,h,name,cooltimemax, clickbonus, func)
   self.x,self.y,self.w,self.h = x,y,w,h
   self.level = 1
   self.c = {1,1,1,1}
@@ -12,6 +12,7 @@ function Cooldown:initialize(x,y,w,h,name,cooltimemax,func)
   self.cooltimemax = cooltimemax
   self.cooltime = 0
   self.cooling = false
+  self.clickbonus = clickbonus -- when cooling down and button is clicked, speeds up by this much
   self.leftdown = true
 end
 
@@ -38,6 +39,9 @@ function Cooldown:draw()
       self.c = {0.8,0.8,0.8}
       if love.mouse.isDown(1) and self.leftdown == false and self.cooling == false then
         self.cooling = true
+        self.leftdown = true
+      elseif love.mouse.isDown(1) and self.leftdown == false then
+        self.cooltime = self.cooltime + self.clickbonus
         self.leftdown = true
       elseif self.leftdown == true then
         if love.mouse.isDown(1) == false then

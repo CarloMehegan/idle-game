@@ -129,13 +129,13 @@ function love.load()
   end)
 
   local foodx,foody = 330,180
-  cooldowns["find_food"] = Cooldown:new(foodx, foody, 100, 50, "find food", 3, function()
+  cooldowns["find_food"] = Cooldown:new(foodx, foody, 100, 50, "find food", 2.8, 0.4, function()
     local found = love.math.random(3, 6)
     food = food + found
     table.insert(messages, Msg:new("found "..found.." worms!", foodx, foody-10))
   end)
   local enx,eny = 330,90
-  cooldowns["make_energy"] = Cooldown:new(enx, eny, 100, 50, "photosynthesize", 0.2, function()
+  cooldowns["make_energy"] = Cooldown:new(enx, eny, 100, 50, "photosynthesize", 0.2, 0.1, function()
     energy = energy + 1
     table.insert(messages, Msg:new("energy gained!", enx, eny-10))
   end)
