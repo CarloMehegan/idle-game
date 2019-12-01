@@ -17,6 +17,7 @@ function love.load()
     "123456789.,!?-+/():;%&`'*#=[]\"")
   buttonfont = love.graphics.newFont("nimbusmono-regular.otf", 15)
 
+  fullscreen = false
   lastLeftDown = false
   isLeftDown = false
   newClick = false
@@ -32,8 +33,6 @@ function love.load()
   otters = 0
   seals = 0
   hippos = 0
-  leopards = 0
-  tigers = 0
   pandas = 0
   messages = {}
   buttons = {}
@@ -133,57 +132,167 @@ function love.load()
     table.insert(messages, Msg:new("energy gained!", enx, eny-10))
   end)
 
-  worker_ids = {
-    "axo_worker",
-    "fen_worker",
-    "pan_worker",
-    "cat_worker",
-    "ott_worker",
-    "sea_worker",
-    "hip_worker",
-    "gia_worker"
-  }
+
+
   worker_costs = {
     10, 50, 100, 300, 1000, 4500, 9000, 120000
   }
-  worker_animals = {
-    "axolotl",
-    "fennec",
-    "pangolin",
-    "kitten",
-    "otter",
-    "seal",
-    "hippo",
-    "panda"
-  }
+  -- worker_animals = {
+  --   "axolotl",
+  --   "fennec",
+  --   "pangolin",
+  --   "kitten",
+  --   "otter",
+  --   "seal",
+  --   "hippo",
+  --   "panda"
+  -- }
   worker_strength = {
     10, 50, 100, 300, 1000, 4500, 9000, 120000
   }
-  worker_colors = {
-    {1,0,0,0.9},
-    {1,0.5,0,0.9},
-    {1,1,0,0.9},
-    {0,1,0,0.9},
-    {0,1,1,0.9},
-    {0,0,1,0.9},
-    {0.5,0,1,0.9},
-    {1,0,1,0.9}
-  }
+  -- worker_colors = {
+  --   {1,0,0,0.9},
+  --   {1,0.5,0,0.9},
+  --   {1,1,0,0.9},
+  --   {0,1,0,0.9},
+  --   {0,1,1,0.9},
+  --   {0,0,1,0.9},
+  --   {0.5,0,1,0.9},
+  --   {1,0,1,0.9}
+  -- }
 
-  for i=1,8 do -- make + buttons
-    local x = 660
-    local y = 76 + 34*(i-1)
-    buttons[worker_ids[i]] = Button:new(x, y, 15, 15, "+", "", "single", function()
-      local cost = worker_costs[i]
-      if food >= cost then
-        table.insert(messages, Msg:new("new worker!", x+22, y+2))
-        table.insert(workers, Worker:new(worker_animals[i], "", worker_strength[i], worker_colors[i]))
-        food = food - cost
-      elseif food < cost then
-        table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
-      end
-    end)
-  end
+  -- local x = 660
+  -- local x, y = 660, 76 + 34*(i-1)
+  -- buttons[worker_ids[i]] = Button:new(x, y, 15, 15, "+", "", "single", function()
+  --   local cost = worker_costs[i]
+  --   if food >= cost then
+  --     table.insert(messages, Msg:new("new worker!", x+22, y+2))
+  --     table.insert(workers, Worker:new(worker_animals[i], "", worker_strength[i], worker_colors[i]))
+  --     food = food - cost
+  --   elseif food < cost then
+  --     table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+  --   end
+  -- end)
+
+  local x, y = 660, 76 + 34*(0)
+  buttons["axo_worker"] = Button:new(x, y, 15, 15, "+", "", "single", function()
+    local cost = 10
+    if food >= cost and axolotls >= 1 then
+      table.insert(messages, Msg:new("new worker!", x+22, y+2))
+      table.insert(workers, Worker:new("axolotl", "", 10, {1,0,0,0.9}))
+      food = food - cost
+      axolotls = axolotls - 1
+    elseif food < cost then
+      table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+    elseif axolotls < 1 then
+      table.insert(messages, Msg:new("need an axolotl!", x+22, y+2, 0, 0))
+    end
+  end)
+
+  local x, y = 660, 76 + 34*(1)
+  buttons["fen_worker"] = Button:new(x, y, 15, 15, "+", "", "single", function()
+    local cost = 10
+    if food >= cost and fennecs >= 1 then
+      table.insert(messages, Msg:new("new worker!", x+22, y+2))
+      table.insert(workers, Worker:new("fennec", "", 10, {1,0.5,0,0.9}))
+      food = food - cost
+      fennecs = fennecs - 1
+    elseif food < cost then
+      table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+    elseif fennecs < 1 then
+      table.insert(messages, Msg:new("need a fennec fox!", x+22, y+2, 0, 0))
+    end
+  end)
+
+  local x, y = 660, 76 + 34*(2)
+  buttons["pan_worker"] = Button:new(x, y, 15, 15, "+", "", "single", function()
+    local cost = 10
+    if food >= cost and pangolins >= 1 then
+      table.insert(messages, Msg:new("new worker!", x+22, y+2))
+      table.insert(workers, Worker:new("pangolin", "", 10, {1,1,0,0.9}))
+      food = food - cost
+      pangolins = pangolins - 1
+    elseif food < cost then
+      table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+    elseif pangolins < 1 then
+      table.insert(messages, Msg:new("need a pangolin!", x+22, y+2, 0, 0))
+    end
+  end)
+
+  local x, y = 660, 76 + 34*(3)
+  buttons["cat_worker"] = Button:new(x, y, 15, 15, "+", "", "single", function()
+    local cost = 10
+    if food >= cost and kittens >= 1 then
+      table.insert(messages, Msg:new("new worker!", x+22, y+2))
+      table.insert(workers, Worker:new("kitten", "", 10, {0,1,0,0.9}))
+      food = food - cost
+      kittens = kittens - 1
+    elseif food < cost then
+      table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+    elseif kittens < 1 then
+      table.insert(messages, Msg:new("need a sand kitty!", x+22, y+2, 0, 0))
+    end
+  end)
+
+  local x, y = 660, 76 + 34*(4)
+  buttons["ott_worker"] = Button:new(x, y, 15, 15, "+", "", "single", function()
+    local cost = 10
+    if food >= cost and otters >= 1 then
+      table.insert(messages, Msg:new("new worker!", x+22, y+2))
+      table.insert(workers, Worker:new("otter", "", 10, {0,1,1,0.9}))
+      food = food - cost
+      otters = otters - 1
+    elseif food < cost then
+      table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+    elseif otters < 1 then
+      table.insert(messages, Msg:new("need a sea otter!", x+22, y+2, 0, 0))
+    end
+  end)
+
+  local x, y = 660, 76 + 34*(5)
+  buttons["sea_worker"] = Button:new(x, y, 15, 15, "+", "", "single", function()
+    local cost = 10
+    if food >= cost and seals >= 1 then
+      table.insert(messages, Msg:new("new worker!", x+22, y+2))
+      table.insert(workers, Worker:new("seal", "", 10, {0,0,1,0.9}))
+      food = food - cost
+      seals = seals - 1
+    elseif food < cost then
+      table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+    elseif seals < 1 then
+      table.insert(messages, Msg:new("need a harp seal!", x+22, y+2, 0, 0))
+    end
+  end)
+
+  local x, y = 660, 76 + 34*(6)
+  buttons["hip_worker"] = Button:new(x, y, 15, 15, "+", "", "single", function()
+    local cost = 10
+    if food >= cost and hippos >= 1 then
+      table.insert(messages, Msg:new("new worker!", x+22, y+2))
+      table.insert(workers, Worker:new("hippo", "", 10, {0.5,0,1,0.9}))
+      food = food - cost
+      hippos = hippos - 1
+    elseif food < cost then
+      table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+    elseif hippos < 1 then
+      table.insert(messages, Msg:new("need a hippo!", x+22, y+2, 0, 0))
+    end
+  end)
+
+  local x, y = 660, 76 + 34*(7)
+  buttons["gia_worker"] = Button:new(x, y, 15, 15, "+", "", "single", function()
+    local cost = 10
+    if food >= cost and pandas >= 1 then
+      table.insert(messages, Msg:new("new worker!", x+22, y+2))
+      table.insert(workers, Worker:new("panda", "", 10, {1,0,1,0.9}))
+      food = food - cost
+      pandas = pandas - 1
+    elseif food < cost then
+      table.insert(messages, Msg:new("need " .. cost .. " food!", x+22, y+2, 0, 0))
+    elseif pandas < 1 then
+      table.insert(messages, Msg:new("need a panda!", x+22, y+2, 0, 0))
+    end
+  end)
 
 end
 
@@ -304,5 +413,14 @@ end
 function love.keypressed(key, scancode, isrepeat)
   if key == "escape" then
     love.event.quit()
+  end
+  if key == "f" then
+    if fullscreen == false then
+      love.window.setMode( 800, 600, {fullscreen = true} )
+      fullscreen = true
+    elseif fullscreen == true then
+      love.window.setMode( 1200, 820, {resizable = true, minwidth=800, minheight=600})
+      fullscreen = false
+    end
   end
 end
