@@ -24,8 +24,11 @@ function love.load()
   showContractPanels = false
   showContractHelp = false
 
-  energy = 90
-  food = 90
+  energy = 0
+  food = 0
+  energyonclick = 1
+  minchancefood = 3
+  maxchancefood = 6
   producingenergy = 0
   producingfood = 0
   axolotls = 0
@@ -65,7 +68,7 @@ function love.load()
   end)
   local pangox,pangoy = 475,270
   local cost = 1100
-  buttons["make_pangolin"] = Button:new(pangox, pangoy, 100, 50, "pangolin", "1K energy", "single", function()
+  buttons["make_pangolin"] = Button:new(pangox, pangoy, 100, 50, "pangolin", "1.1K energy", "single", function()
     if energy >= cost then
       table.insert(messages, Msg:new("happy birthday!", pangox,pangoy-10))
       pangolins = pangolins + 1
@@ -139,14 +142,14 @@ function love.load()
 
   local foodx,foody = 330,180
   cooldowns["find_food"] = Cooldown:new(foodx, foody, 100, 50, "find food", 2.8, 0.4, function()
-    local found = love.math.random(3, 6)
+    local found = love.math.random(minchancefood, maxchancefood)
     food = food + found
-    table.insert(messages, Msg:new("found "..found.." worms!", foodx, foody-10))
+    table.insert(messages, Msg:new("found "..found.." berries!", foodx, foody-10))
   end)
   local enx,eny = 330,90
   cooldowns["make_energy"] = Cooldown:new(enx, eny, 100, 50, "photosynthesize", 0.2, 0.1, function()
-    energy = energy + 1
-    table.insert(messages, Msg:new("energy gained!", enx, eny-10))
+    energy = energy + energyonclick
+    table.insert(messages, Msg:new(energyonclick .. " energy gained!", enx, eny-10))
   end)
 
 
@@ -318,6 +321,7 @@ function love.update(dt)
   --making worker sprites move and calculating production
   producingenergy = 0
   producingfood = 0
+  roaminganimals = 0
   for k,v in pairs(workers) do
     workers[k]:update(newClick)
     if v.job == "energy" then
@@ -326,8 +330,13 @@ function love.update(dt)
     elseif v.job == "food" then
       producingfood = producingfood + v.strength*2
       food = food + (v.strength*2 * dt)
+    elseif v.job == "" then
+      roaminganimals = roaminganimals + v.strength*8
     end
   end
+  maxchancefood = 6 + math.floor(roaminganimals/4)
+  minchancefood = 3 + math.floor(roaminganimals/6)
+  energyonclick = 1 + math.floor(roaminganimals/3)
 
   --keeping buttons hidden until certain events
   if buttons["make_fennec"].shown == false then
@@ -371,7 +380,7 @@ function love.update(dt)
     else buttons["gia_worker"].shown = false end
   end
 
-  if energy >= 30 and buttons["unlock_contracts"].shown == false then
+  if energy >= 10 and axolotls > 0 and buttons["unlock_contracts"].shown == false and showContractPanels == false then
     buttons["unlock_contracts"].shown = true
   end
   buttons["contract_help"].shown = showContractPanels
@@ -466,14 +475,37 @@ function love.draw()
     love.graphics.line(606, 350, 2000, 350)
     love.graphics.print("energy", 620, 370,0,2)
     if producingenergy > 0 then
+      if producingenergy > 1000000 then
+        love.graphics.print(string.format("producing %.3e energy/sec", producingenergy), 620, 410,0,1)
+      else
         love.graphics.print("producing " .. producingenergy .. " energy/sec", 620, 410,0,1)
+      end
     end
     love.graphics.line(902, 350, 902, 1200)
     love.graphics.print("food", 917, 370,0,2)
     if producingfood > 0 then
+      if producingfood > 1000000 then
+        love.graphics.print(string.format("producing %.3e food/sec", producingfood), 917, 410,0,1)
+      else
         love.graphics.print("producing " .. producingfood .. " food/sec", 917, 410,0,1)
+      end
     end
     love.graphics.line(1205, 350, 1205, 1200)
+    if roaminganimals > 0 then
+      -- love.graphics.printf(roaminganimals, x, y, limit, align, r, sx, sy, ox, oy, kx, ky)roaminganimals
+    end
+    if roaminganimals > 0 and showContractHelp == false then
+      local x = 620
+      local y = 75
+      if axolotls > 0 then
+        x = 700
+      end
+      if roaminganimals > 1000000 then
+        love.graphics.print(string.format("roaming animal strength: %.3e", roaminganimals), x, y,0,1)
+      else
+        love.graphics.print("roaming animal strength: " .. roaminganimals, x, y,0,1)
+      end
+    end
   end
 
 
