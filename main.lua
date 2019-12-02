@@ -10,7 +10,7 @@ local Worker = require "worker"
 function love.load()
   love.window.setMode(1200, 820, {resizable = true, minwidth=800, minheight=600}) --sets size of window
   love.graphics.setDefaultFilter('nearest', 'nearest') -- makes images not blurry
-  love.window.setTitle("Idle Game") -- window title
+  love.window.setTitle("Unendangerer - Save The Animals!") -- window title
   menufont = love.graphics.newImageFont("imagefont.png",
     " abcdefghijklmnopqrstuvwxyz" ..
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
@@ -21,10 +21,11 @@ function love.load()
   lastLeftDown = false
   isLeftDown = false
   newClick = false
+  showContractPanels = false
   showContractHelp = false
 
-  energy = 100
-  food = 150
+  energy = 90
+  food = 90
   producingenergy = 0
   producingfood = 0
   axolotls = 0
@@ -128,6 +129,13 @@ function love.load()
       table.insert(messages, Msg:new("need energy!", pandax, panday-15, 0, 0))
     end
   end)
+  buttons["make_fennec"].shown = false
+  buttons["make_pangolin"].shown = false
+  buttons["make_kitten"].shown = false
+  buttons["make_otter"].shown = false
+  buttons["make_seal"].shown = false
+  buttons["make_hippo"].shown = false
+  buttons["make_panda"].shown = false
 
   local foodx,foody = 330,180
   cooldowns["find_food"] = Cooldown:new(foodx, foody, 100, 50, "find food", 2.8, 0.4, function()
@@ -156,7 +164,6 @@ function love.load()
       table.insert(messages, Msg:new("need an axolotl!", x+22, y+2, 0, 0))
     end
   end)
-
   local cost = 150
   local x, y = 660, 76 + 34*(1)
   buttons["fen_worker"] = Button:new(x, y, 15, 15, "+", cost, "single", function()
@@ -171,7 +178,6 @@ function love.load()
       table.insert(messages, Msg:new("need a fennec fox!", x+22, y+2, 0, 0))
     end
   end)
-
   local cost = 1650
   local x, y = 660, 76 + 34*(2)
   buttons["pan_worker"] = Button:new(x, y, 15, 15, "+", cost, "single", function()
@@ -186,7 +192,6 @@ function love.load()
       table.insert(messages, Msg:new("need a pangolin!", x+22, y+2, 0, 0))
     end
   end)
-
   local cost = 1800
   local x, y = 660, 76 + 34*(3)
   buttons["cat_worker"] = Button:new(x, y, 15, 15, "+", cost, "single", function()
@@ -201,7 +206,6 @@ function love.load()
       table.insert(messages, Msg:new("need a sand kitty!", x+22, y+2, 0, 0))
     end
   end)
-
   local cost = 195000
   local x, y = 660, 76 + 34*(4)
   buttons["ott_worker"] = Button:new(x, y, 15, 15, "+", cost, "single", function()
@@ -216,7 +220,6 @@ function love.load()
       table.insert(messages, Msg:new("need a sea otter!", x+22, y+2, 0, 0))
     end
   end)
-
   local cost = 2.1 * 1000000
   local x, y = 660, 76 + 34*(5)
   buttons["sea_worker"] = Button:new(x, y, 15, 15, "+", cost, "single", function()
@@ -231,7 +234,6 @@ function love.load()
       table.insert(messages, Msg:new("need a harp seal!", x+22, y+2, 0, 0))
     end
   end)
-
   local cost = 30 * 1000000
   local x, y = 660, 76 + 34*(6)
   buttons["hip_worker"] = Button:new(x, y, 15, 15, "+", cost, "single", function()
@@ -247,7 +249,6 @@ function love.load()
       table.insert(messages, Msg:new("need a hippo!", x+22, y+2, 0, 0))
     end
   end)
-
   local cost = 495 * 1000000
   local x, y = 660, 76 + 34*(7)
   buttons["gia_worker"] = Button:new(x, y, 15, 15, "+", cost, "single", function()
@@ -262,6 +263,14 @@ function love.load()
       table.insert(messages, Msg:new("need a panda!", x+22, y+2, 0, 0))
     end
   end)
+  buttons["axo_worker"].shown = false
+  buttons["fen_worker"].shown = false
+  buttons["pan_worker"].shown = false
+  buttons["cat_worker"].shown = false
+  buttons["ott_worker"].shown = false
+  buttons["sea_worker"].shown = false
+  buttons["hip_worker"].shown = false
+  buttons["gia_worker"].shown = false
 
   local prompt = "click for help"
   local x, y = 785, 28
@@ -273,9 +282,23 @@ function love.load()
     end
   end)
 
+  local x,y = 330,270
+  buttons["unlock_contracts"] = Button:new(330, 270, 100, 50, "unlock contracts", "", "single", function()
+    if energy >= 50 and food >= 50 then
+      showContractPanels = true
+      energy = energy - 50
+      food = food - 50
+      buttons["unlock_contracts"].shown = false
+    elseif energy < 50 or food < 50 then
+      table.insert(messages, Msg:new("need 50 food and 50 energy!", x+107, y+19, 0, 0))
+    end
+  end)
+  buttons["unlock_contracts"].shown = false
+
 end
 
 function love.update(dt)
+  --checking clicky stuff to prevent repeat clicks
   lastLeftDown = isLeftDown
   isLeftDown = love.mouse.isDown(1)
   if lastLeftDown == false and isLeftDown == true then
@@ -284,12 +307,15 @@ function love.update(dt)
     newClick = false
   end
 
+  --updating moving messages and cooldown bars
   for k,v in pairs(messages) do
     messages[k]:update(dt)
   end
   for k,v in pairs(cooldowns) do
     cooldowns[k]:update(dt)
   end
+
+  --making worker sprites move and calculating production
   producingenergy = 0
   producingfood = 0
   for k,v in pairs(workers) do
@@ -303,6 +329,52 @@ function love.update(dt)
     end
   end
 
+  --keeping buttons hidden until certain events
+  if buttons["make_fennec"].shown == false then
+    if axolotls >= 1 then buttons["make_fennec"].shown = true end
+  end
+  if buttons["make_pangolin"].shown == false then
+    if fennecs >= 1 then buttons["make_pangolin"].shown = true end
+  end
+  if buttons["make_kitten"].shown == false then
+    if pangolins >= 1 then buttons["make_kitten"].shown = true end
+  end
+  if buttons["make_otter"].shown == false then
+    if kittens >= 1 then buttons["make_otter"].shown = true end
+  end
+  if buttons["make_seal"].shown == false then
+    if otters >= 1 then buttons["make_seal"].shown = true end
+  end
+  if buttons["make_hippo"].shown == false then
+    if seals >= 1 then buttons["make_hippo"].shown = true end
+  end
+  if buttons["make_panda"].shown == false then
+    if hippos >= 1 then buttons["make_panda"].shown = true end
+  end
+
+  if showContractPanels then
+    if axolotls >= 1 then buttons["axo_worker"].shown = true
+    else buttons["axo_worker"].shown = false end
+    if fennecs >= 1 then buttons["fen_worker"].shown = true
+    else buttons["fen_worker"].shown = false end
+    if pangolins >= 1 then buttons["pan_worker"].shown = true
+    else buttons["pan_worker"].shown = false end
+    if kittens >= 1 then buttons["cat_worker"].shown = true
+    else buttons["cat_worker"].shown = false end
+    if otters >= 1 then buttons["ott_worker"].shown = true
+    else buttons["ott_worker"].shown = false end
+    if seals >= 1 then buttons["sea_worker"].shown = true
+    else buttons["sea_worker"].shown = false end
+    if hippos >= 1 then buttons["hip_worker"].shown = true
+    else buttons["hip_worker"].shown = false end
+    if pandas >= 1 then buttons["gia_worker"].shown = true
+    else buttons["gia_worker"].shown = false end
+  end
+
+  if energy >= 30 and buttons["unlock_contracts"].shown == false then
+    buttons["unlock_contracts"].shown = true
+  end
+  buttons["contract_help"].shown = showContractPanels
 end
 
 function love.draw()
@@ -322,8 +394,7 @@ function love.draw()
 
   love.graphics.setColor(1, 1, 1, 1)
   love.graphics.setFont(menufont)
-  love.graphics.print("resources", 30, 20,0,2)
-  love.graphics.line(0, 60, 2000, 60)
+
 
   --these numbers get big, so once theyre over 1M, we use scientific notation
   if energy > 1000000 then
@@ -337,50 +408,76 @@ function love.draw()
     formattedfood = "food: " .. math.floor(food)
   end
 
+  --hiding stuff
+  if axolotls > 0 then axotext = "\n\naxolotls: " .. axolotls
+  else axotext = "" end
+  if fennecs > 0 then fentext = "\n\nfennecs: " .. fennecs
+  else fentext = "" end
+  if pangolins > 0 then pantext = "\n\npangolins: " .. pangolins
+  else pantext = "" end
+  if kittens > 0 then cattext = "\n\nkittens: " .. kittens
+  else cattext = "" end
+  if otters > 0 then otttext = "\n\notters: " .. otters
+  else otttext = "" end
+  if seals > 0 then seatext = "\n\nseals: " .. seals
+  else seatext = "" end
+  if hippos > 0 then hiptext = "\n\nhippos: " .. hippos
+  else hiptext = "" end
+  if pandas > 0 then giatext = "\n\npandas: " .. pandas
+  else giatext = "" end
+
   -- for the resources panel
+  -- (printing it all complicated because bigger numbers
+  -- will take up two rows of text)
   love.graphics.printf(
     "" .. formattedenergy
     .."\n\n" .. formattedfood
-    .."\n\naxolotls: " .. axolotls
-    .."\n\nfennecs: " .. fennecs
-    .."\n\npangolins: " .. pangolins
-    .."\n\nkittens: " .. kittens
-    .."\n\notters: " .. otters
-    .."\n\nseals: " .. seals
-    .."\n\nhippos: " .. hippos
-    .."\n\npandas: " .. pandas
+    ..axotext
+    ..fentext
+    ..pantext
+    ..cattext
+    ..otttext
+    ..seatext
+    ..hiptext
+    ..giatext
   , 30, 80, 125, "left", 0,1.8)
 
-  --for the contract panel
-  love.graphics.printf(
-    "axo: "
-    .."\n\nfen: "
-    .."\n\npan: "
-    .."\n\ncat: "
-    .."\n\nott: "
-    .."\n\nsea: "
-    .."\n\nhip: "
-    .."\n\ngia: "
-  , 620, 75, 125, "left", 0,1)
+  -- for the contract panel
+  if showContractPanels then
+    if axolotls > 0 then love.graphics.print("axo: ", 620, 75 + 34*(0)) end
+    if fennecs > 0 then love.graphics.print("fen: ", 620, 75 + 34*(1)) end
+    if pangolins > 0 then love.graphics.print("pan: ", 620, 75 + 34*(2)) end
+    if kittens > 0 then love.graphics.print("cat: ", 620, 75 + 34*(3)) end
+    if otters > 0 then love.graphics.print("ott: ", 620, 75 + 34*(4)) end
+    if seals > 0 then love.graphics.print("sea: ", 620, 75 + 34*(5)) end
+    if hippos > 0 then love.graphics.print("hip: ", 620, 75 + 34*(6)) end
+    if pandas > 0 then love.graphics.print("pan: ", 620, 75 + 34*(7)) end
+  end
 
+  love.graphics.print("resources", 30, 20,0,2)
+  love.graphics.line(0, 60, 2000, 60)
   love.graphics.line(300, 0, 300, 1200)
   love.graphics.print("gather", 330, 20,0,2)
   love.graphics.print("make", 485, 20,0,2)
-  love.graphics.line(605, 0, 605, 1200)
-  love.graphics.print("contract", 630, 20,0,2)
-  love.graphics.line(606, 350, 2000, 350)
-  love.graphics.print("energy", 620, 370,0,2)
-  if producingenergy > 0 then
-      love.graphics.print("producing " .. producingenergy .. " energy/sec", 620, 410,0,1)
-  end
-  love.graphics.line(902, 350, 902, 1200)
-  love.graphics.print("food", 917, 370,0,2)
-  if producingfood > 0 then
-      love.graphics.print("producing " .. producingfood .. " food/sec", 917, 410,0,1)
-  end
-  love.graphics.line(1205, 350, 1205, 1200)
 
-love.graphics.setFont(buttonfont)
+  if showContractPanels then
+    love.graphics.line(605, 0, 605, 1200)
+    love.graphics.print("contract", 630, 20,0,2)
+    love.graphics.line(606, 350, 2000, 350)
+    love.graphics.print("energy", 620, 370,0,2)
+    if producingenergy > 0 then
+        love.graphics.print("producing " .. producingenergy .. " energy/sec", 620, 410,0,1)
+    end
+    love.graphics.line(902, 350, 902, 1200)
+    love.graphics.print("food", 917, 370,0,2)
+    if producingfood > 0 then
+        love.graphics.print("producing " .. producingfood .. " food/sec", 917, 410,0,1)
+    end
+    love.graphics.line(1205, 350, 1205, 1200)
+  end
+
+
+  love.graphics.setFont(buttonfont)
   if showContractHelp then
     love.graphics.printf("This is where you hire animals to help you. Once hired, drag them into the energy or food columns to assign them to those jobs. Animals left roaming with no jobs will aid you when you manually gather resources.", 800, 75, 200)
   end
