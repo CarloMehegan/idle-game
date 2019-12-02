@@ -7,7 +7,6 @@ function Worker:initialize(type, job, strength, color)
   self.job = job
   self.type = type
   self.color = color
-  self.img = love.graphics.newImage("sprites/Mars Background - Copy.png")
   self.s = 1
   self.w = 32 * self.s
   self.h = 32 * self.s
