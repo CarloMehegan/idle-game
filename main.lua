@@ -35,8 +35,8 @@ function love.load()
   showContractPanels = false
   showContractHelp = false
 
-  energy = 0
-  food = 0
+  energy = 6000000000000000000000
+  food = 6000000000000000000000
   energyonclick = 1
   minchancefood = 3
   maxchancefood = 6
