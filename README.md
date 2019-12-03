@@ -1,5 +1,6 @@
-# Unendangerer v1.1
+# Unendangerer
 An idle game for AP Comp Sci Principles
+November - December 2019
 
 ## Goal
 Collect food and energy to save endangered species!
