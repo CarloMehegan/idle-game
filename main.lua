@@ -206,7 +206,7 @@ function love.load()
       table.insert(messages, Msg:new("need a pangolin!", x+22, y+2, 0, 0))
     end
   end)
-  local cost = 1800
+  local cost = 18000
   local x, y = 660, 76 + 34*(3)
   buttons["cat_worker"] = Button:new(x, y, 15, 15, "+", cost, "single", function()
     if food >= cost and kittens >= 1 then
@@ -254,7 +254,7 @@ function love.load()
 
     if food >= cost and hippos >= 1 then
       table.insert(messages, Msg:new("new worker!", x+22, y+2))
-      table.insert(workers, Worker:new("hippo", "", 7800, {0.5,0,1,0.9}))
+      table.insert(workers, Worker:new("hippo", "", 78000, {0.5,0,1,0.9}))
       food = food - cost
       hippos = hippos - 1
     elseif food < cost then
@@ -268,7 +268,7 @@ function love.load()
   buttons["gia_worker"] = Button:new(x, y, 15, 15, "+", cost, "single", function()
     if food >= cost and pandas >= 1 then
       table.insert(messages, Msg:new("new worker!", x+22, y+2))
-      table.insert(workers, Worker:new("panda", "", 44000, {1,0,1,0.9}))
+      table.insert(workers, Worker:new("panda", "", 780000, {1,0,1,0.9}))
       food = food - cost
       pandas = pandas - 1
     elseif food < cost then
@@ -509,7 +509,7 @@ function love.draw()
       local x = 620
       local y = 75
       if axolotls > 0 then
-        x = 700
+        x = 800
       end
       if roaminganimals > 1000000 then
         love.graphics.print(string.format("roaming animal strength: %.3e", roaminganimals), x, y,0,1)
