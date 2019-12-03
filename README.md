@@ -11,3 +11,5 @@ Mouse used for everything. Start by pressing the energy and food buttons. Cooldo
 Dragging workers into jobs will have them automatically produce specific resources. However, leaving them unemployed will allow them to join your journeys and will increase the power of the energy and food buttons.
 
 There are eight different species of animals to save, and they're all extremely cute
+
+Press f to toggle fullscreen, press escape to close
