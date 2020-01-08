@@ -74,6 +74,32 @@ function Button:draw()
         love.graphics.print("press for help", self.x + 22, self.y + 2)
         -- love.graphics.print("need " .. self.pricelabel .. " food", self.x + 22, self.y + 2)
       end
+    elseif self.name == "v" or self.name == "^" or self.name == ">" or self.name == "<" then --the movement buttons
+      love.graphics.printf(self.name, self.x, self.y + 2, self.w, "center")
+      mx, my = love.mouse.getPosition()
+      if mx >= self.x and
+         mx <= self.x + self.w and
+         my >= self.y and
+         my <= self.y + self.h
+      then
+        love.graphics.setColor(1,1,1)
+        --print twice because it wont show up thick enough
+        love.graphics.print(self.pricelabel, 620, 358)
+        love.graphics.print(self.pricelabel, 620, 358)
+      end
+    -- elseif self.name == ">" or self.name == "<" then --the movement buttons
+    --   love.graphics.printf(self.name, self.x, self.y + 2, self.w, "center")
+    --   mx, my = love.mouse.getPosition()
+    --   if mx >= self.x and
+    --      mx <= self.x + self.w and
+    --      my >= self.y and
+    --      my <= self.y + self.h
+    --   then
+    --     love.graphics.setColor(1,1,1)
+    --     --print twice because it wont show up thick enough
+    --     love.graphics.print(self.pricelabel, 740, 356)
+    --     love.graphics.print(self.pricelabel, 740, 356)
+    --   end
     else
       love.graphics.printf(self.name, self.x + 10, self.y + 10, self.w - 15, "left")
       love.graphics.setColor(1,1,1)

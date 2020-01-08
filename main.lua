@@ -35,8 +35,8 @@ function love.load()
   showContractPanels = false
   showContractHelp = false
 
-  energy = 0
-  food = 0
+  energy = 1000000000000000000000000000000
+  food = 100000000000000000000000000000000
   energyonclick = 1
   minchancefood = 3
   maxchancefood = 6
@@ -297,7 +297,7 @@ function love.load()
   end)
 
   local x,y = 330,270
-  buttons["unlock_contracts"] = Button:new(330, 270, 100, 50, "unlock contracts", "", "single", function()
+  buttons["unlock_contracts"] = Button:new(x, y, 100, 50, "unlock contracts", "", "single", function()
     if energy >= 50 and food >= 50 then
       showContractPanels = true
       energy = energy - 50
@@ -308,6 +308,84 @@ function love.load()
     end
   end)
   buttons["unlock_contracts"].shown = false
+
+  --organizational buttons
+
+  local x,y = 745,378
+  buttons["e_hire_all"] = Button:new(x, y, 15, 15, "v", "hire all unemployed", "single", function()
+    for k,v in pairs(workers) do
+      if v.isWorking == false then
+        v.isWorking = true
+        v.job = "energy"
+        v.x = love.math.random(610,867)
+        v.y = love.math.random(435,love.graphics.getHeight() - 40)
+      end
+    end
+  end)
+  buttons["e_hire_all"].shown = false
+
+  local x,y = 765,378
+  buttons["e_fire_all"] = Button:new(x, y, 15, 15, "^", "fire all employed", "single", function()
+    for k,v in pairs(workers) do
+      if v.job == "energy" then
+        v.isWorking = false
+        v.job = ""
+        v.x = love.math.random(690, love.graphics.getWidth() - 5 - v.w)
+        v.y = love.math.random(65, 345 - v.h)
+      end
+    end
+  end)
+  buttons["e_fire_all"].shown = false
+
+  local x,y = 785,378
+  buttons["moveto_food"] = Button:new(x, y, 15, 15, ">", "move employed to food", "single", function()
+    for k,v in pairs(workers) do
+      if v.job == "energy" then
+        v.job = "food"
+        v.x = love.math.random(907,1164)
+        v.y = love.math.random(435,love.graphics.getHeight() - 40)
+      end
+    end
+  end)
+  buttons["moveto_food"].shown = false
+
+  local x,y = 1005,378
+  buttons["f_hire_all"] = Button:new(x, y, 15, 15, "v", "hire all unemployed", "single", function()
+    for k,v in pairs(workers) do
+      if v.isWorking == false then
+        v.isWorking = true
+        v.job = "food"
+        v.x = love.math.random(907,1164)
+        v.y = love.math.random(435,love.graphics.getHeight() - 40)
+      end
+    end
+  end)
+  buttons["f_hire_all"].shown = false
+
+  local x,y = 1025,378
+  buttons["f_fire_all"] = Button:new(x, y, 15, 15, "^", "fire all employed", "single", function()
+    for k,v in pairs(workers) do
+      if v.job == "food" then
+        v.isWorking = false
+        v.job = ""
+        v.x = love.math.random(690, love.graphics.getWidth() - 5 - v.w)
+        v.y = love.math.random(65, 345 - v.h)
+      end
+    end
+  end)
+  buttons["f_fire_all"].shown = false
+
+  local x,y = 1045,378
+  buttons["moveto_energy"] = Button:new(x, y, 15, 15, "<", "move employed to energy", "single", function()
+    for k,v in pairs(workers) do
+      if v.job == "food" then
+        v.job = "energy"
+        v.x = love.math.random(610,867)
+        v.y = love.math.random(435,love.graphics.getHeight() - 40)
+      end
+    end
+  end)
+  buttons["moveto_energy"].shown = false
 
 end
 
@@ -395,6 +473,12 @@ function love.update(dt)
     buttons["unlock_contracts"].shown = true
   end
   buttons["contract_help"].shown = showContractPanels
+  buttons["e_hire_all"].shown = showContractPanels
+  buttons["e_fire_all"].shown = showContractPanels
+  buttons["moveto_food"].shown = showContractPanels
+  buttons["f_hire_all"].shown = showContractPanels
+  buttons["f_fire_all"].shown = showContractPanels
+  buttons["moveto_energy"].shown = showContractPanels
 end
 
 function love.draw()
@@ -525,8 +609,8 @@ function love.draw()
     love.graphics.printf("This is where you hire animals to help you. Once hired, drag them into the energy or food columns to assign them to those jobs. Animals left roaming with no jobs will aid you when you manually gather resources.", 800, 75, 200)
   end
 
-  -- local mx, my = love.mouse.getPosition()
-  -- love.graphics.print(mx .. ", " .. my, mx, my+20)
+  local mx, my = love.mouse.getPosition()
+  love.graphics.print(mx .. ", " .. my, mx, my+20)
 
   for k,v in pairs(messages) do
     messages[k]:draw()
