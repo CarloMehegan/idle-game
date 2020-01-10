@@ -110,7 +110,7 @@ function Worker:setPath(gx,gy) -- goalx, goaly
 
   local diffx = self.gx - self.x
   local diffy = self.gy - self.y
-  local diffmax = math.max(diffx, diffy)
+  local diffmax = math.max(math.abs(diffx), math.abs(diffy))
   diffmax = math.abs(diffmax)
 
   self.dx = diffx / diffmax
@@ -118,13 +118,17 @@ function Worker:setPath(gx,gy) -- goalx, goaly
 end
 
 function Worker:updatePath() -- goalx, goaly
-  if self.x < self.gx + 8
-    and self.x > self.gx - 8
-    and self.y < self.gy + 8
-    and self.y > self.gy - 8
+  if self.x < self.gx + 10
+    and self.x > self.gx - 10
+    and self.y < self.gy + 10
+    and self.y > self.gy - 10
   then
     self.onPath = false
-    if self.y < 345 or self.x < 605 then
+    if self.x > 690 --check for if inside unemployed zone
+      and self.x + self.w < love.graphics.getWidth() - 5
+      and self.y > 65
+      and self.y < 345
+    then
       self.job = ""
       self.isWorking = false
       self.dx = love.math.random(1,2)
@@ -146,7 +150,7 @@ function Worker:updatePath() -- goalx, goaly
   else
     local diffx = self.gx - self.x
     local diffy = self.gy - self.y
-    local diffmax = math.max(diffx, diffy)
+    local diffmax = math.max(math.abs(diffx), math.abs(diffy))
     diffmax = math.abs(diffmax)
     self.dx = diffx / diffmax
     self.dy = diffy / diffmax

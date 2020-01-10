@@ -317,8 +317,9 @@ function love.load()
       if v.isWorking == false then
         v.isWorking = true
         v.job = "energy"
-        v.x = love.math.random(610,867)
-        v.y = love.math.random(435,love.graphics.getHeight() - 40)
+        -- v.x = love.math.random(610,867)
+        -- v.y = love.math.random(435,love.graphics.getHeight() - 40)
+        v:setPath(love.math.random(610,867),love.math.random(435,love.graphics.getHeight() - 40))
       end
     end
   end)
@@ -330,8 +331,9 @@ function love.load()
       if v.job == "energy" then
         v.isWorking = false
         v.job = ""
-        v.x = love.math.random(690, love.graphics.getWidth() - 5 - v.w)
-        v.y = love.math.random(65, 345 - v.h)
+        -- v.x = love.math.random(690, love.graphics.getWidth() - 5 - v.w)
+        -- v.y = love.math.random(65, 345 - v.h)
+        v:setPath(love.math.random(690, love.graphics.getWidth() - 5 - v.w),love.math.random(65, 345 - v.h))
       end
     end
   end)
@@ -342,8 +344,9 @@ function love.load()
     for k,v in pairs(workers) do
       if v.job == "energy" then
         v.job = "food"
-        v.x = love.math.random(907,1164)
-        v.y = love.math.random(435,love.graphics.getHeight() - 40)
+        -- v.x = love.math.random(907,1164)
+        -- v.y = love.math.random(435,love.graphics.getHeight() - 40)
+        v:setPath(love.math.random(907,1164),love.math.random(435,love.graphics.getHeight() - 40))
       end
     end
   end)
@@ -369,8 +372,9 @@ function love.load()
       if v.job == "food" then
         v.isWorking = false
         v.job = ""
-        v.x = love.math.random(690, love.graphics.getWidth() - 5 - v.w)
-        v.y = love.math.random(65, 345 - v.h)
+        -- v.x = love.math.random(690, love.graphics.getWidth() - 5 - v.w)
+        -- v.y = love.math.random(65, 345 - v.h)
+        v:setPath(love.math.random(690, love.graphics.getWidth() - 5 - v.w),love.math.random(65, 345 - v.h))
       end
     end
   end)
@@ -381,8 +385,9 @@ function love.load()
     for k,v in pairs(workers) do
       if v.job == "food" then
         v.job = "energy"
-        v.x = love.math.random(610,867)
-        v.y = love.math.random(435,love.graphics.getHeight() - 40)
+        -- v.x = love.math.random(610,867)
+        -- v.y = love.math.random(435,love.graphics.getHeight() - 40)
+        v:setPath(love.math.random(610,867),love.math.random(435,love.graphics.getHeight() - 40))
       end
     end
   end)

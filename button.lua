@@ -35,7 +35,7 @@ function Button:draw()
           end
         end
       elseif self.clicktype == "repeat" then
-        if love.mouse.isDown(1) then
+        if love.mouse.isDown(1) and isLeftDown == false then
           self.c = {0.5, 0.5, 0.5}
           self.func()
         end
