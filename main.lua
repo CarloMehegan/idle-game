@@ -355,8 +355,9 @@ function love.load()
       if v.isWorking == false then
         v.isWorking = true
         v.job = "food"
-        v.x = love.math.random(907,1164)
-        v.y = love.math.random(435,love.graphics.getHeight() - 40)
+        -- v.x = love.math.random(907,1164)
+        -- v.y = love.math.random(435,love.graphics.getHeight() - 40)
+        v:setPath(love.math.random(907,1164),love.math.random(435,love.graphics.getHeight() - 40))
       end
     end
   end)

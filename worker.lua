@@ -19,9 +19,16 @@ function Worker:initialize(type, job, strength, color)
   self.speed = love.math.random(80,120)/100
   self.isGrabbed = false
   self.isWorking = false
+  self.onPath = false
+  self.gx = 0
+  self.gy = 0
 end
 
 function Worker:update(isNewClick)
+  if self.onPath then
+    self:updatePath()
+  end
+
   local mx, my = love.mouse.getPosition()
 
   if mx > self.x and
@@ -54,8 +61,7 @@ function Worker:update(isNewClick)
     elseif self.y > 345 and self.x > 902 and self.x < 1200 then
       self.job = "food"
     end
-
-  else -- in contract pool
+  elseif self.onPath == false then -- in contract pool
     self.x = self.x + self.dx*self.speed
     self.y = self.y + self.dy*self.speed
     if self.x < 690 then
@@ -75,6 +81,11 @@ function Worker:update(isNewClick)
       self.dy = -self.dy
     end
   end
+
+  if self.onPath then
+    self.x = self.x + self.dx*self.speed*4
+    self.y = self.y + self.dy*self.speed*4
+  end
 end
 
 function Worker:draw(mx,my)
@@ -89,6 +100,56 @@ function Worker:draw(mx,my)
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
     love.graphics.print(self.type, mx, my + 20)
+  end
+end
+
+function Worker:setPath(gx,gy) -- goalx, goaly
+  self.gx = gx
+  self.gy = gy
+  self.onPath = true
+
+  local diffx = self.gx - self.x
+  local diffy = self.gy - self.y
+  local diffmax = math.max(diffx, diffy)
+  diffmax = math.abs(diffmax)
+
+  self.dx = diffx / diffmax
+  self.dy = diffy / diffmax
+end
+
+function Worker:updatePath() -- goalx, goaly
+  if self.x < self.gx + 8
+    and self.x > self.gx - 8
+    and self.y < self.gy + 8
+    and self.y > self.gy - 8
+  then
+    self.onPath = false
+    if self.y < 345 or self.x < 605 then
+      self.job = ""
+      self.isWorking = false
+      self.dx = love.math.random(1,2)
+      if self.dx == 2 then self.dx = -1 end
+      self.dy = love.math.random(1,2)
+      if self.dy == 2 then self.dy = -1 end
+    end
+    if self.y > 345 and self.x > 605 and self.x < 902 then
+      self.isWorking = true
+      self.job = "energy"
+      self.dx = 0
+      self.dy = 0
+    elseif self.y > 345 and self.x > 902 and self.x < 1200 then
+      self.isWorking = true
+      self.job = "food"
+      self.dx = 0
+      self.dy = 0
+    end
+  else
+    local diffx = self.gx - self.x
+    local diffy = self.gy - self.y
+    local diffmax = math.max(diffx, diffy)
+    diffmax = math.abs(diffmax)
+    self.dx = diffx / diffmax
+    self.dy = diffy / diffmax
   end
 end
 
