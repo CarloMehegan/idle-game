@@ -35,8 +35,8 @@ function love.load()
   showContractPanels = false
   showContractHelp = false
 
-  energy = 1000000000000000000000000000000
-  food = 100000000000000000000000000000000
+  energy = 0
+  food = 0
   energyonclick = 1
   minchancefood = 3
   maxchancefood = 6
@@ -615,8 +615,8 @@ function love.draw()
     love.graphics.printf("This is where you hire animals to help you. Once hired, drag them into the energy or food columns to assign them to those jobs. Animals left roaming with no jobs will aid you when you manually gather resources.", 800, 75, 200)
   end
 
-  local mx, my = love.mouse.getPosition()
-  love.graphics.print(mx .. ", " .. my, mx, my+20)
+  -- local mx, my = love.mouse.getPosition()
+  -- love.graphics.print(mx .. ", " .. my, mx, my+20)
 
   for k,v in pairs(messages) do
     messages[k]:draw()
