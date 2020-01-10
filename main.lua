@@ -35,8 +35,8 @@ function love.load()
   showContractPanels = false
   showContractHelp = false
 
-  energy = 0
-  food = 0
+  energy = 011111111111
+  food = 0111111111111111111
   energyonclick = 1
   minchancefood = 3
   maxchancefood = 6
@@ -490,7 +490,7 @@ end
 function love.draw()
   love.graphics.setFont(buttonfont)
   for k,v in pairs(buttons) do
-    buttons[k]:draw()
+    buttons[k]:draw(newClick)
   end
   for k,v in pairs(cooldowns) do
     cooldowns[k]:draw()

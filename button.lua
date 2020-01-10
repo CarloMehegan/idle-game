@@ -10,12 +10,12 @@ function Button:initialize(x,y,w,h,name,price,clicktype,func)
   self.func = func
   self.name = name
   self.clicktype = clicktype
-  self.leftdown = true
+  self.leftdown = false
   self.pricelabel = price
   self.shown = true
 end
 
-function Button:draw()
+function Button:draw(newClick)
   if self.shown == true then
     if love.mouse.getX() >= self.x and
        love.mouse.getX() <= self.x + self.w and
@@ -25,17 +25,12 @@ function Button:draw()
       self.c = {0.8,0.8,0.8}
 
       if self.clicktype == "single" then
-        if love.mouse.isDown(1) and self.leftdown == false then
+        if newClick then
           self.c = {0.5, 0.5, 0.5}
           self.func()
-          self.leftdown = true
-        elseif self.leftdown == true then
-          if love.mouse.isDown(1) == false then
-            self.leftdown = false
-          end
         end
       elseif self.clicktype == "repeat" then
-        if love.mouse.isDown(1) and isLeftDown == false then
+        if love.mouse.isDown(1) then
           self.c = {0.5, 0.5, 0.5}
           self.func()
         end
