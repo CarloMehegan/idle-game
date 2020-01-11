@@ -35,8 +35,8 @@ function love.load()
   showContractPanels = false
   showContractHelp = false
 
-  energy = 011111111111
-  food = 0111111111111111111
+  energy = 0
+  food = 0
   energyonclick = 1
   minchancefood = 3
   maxchancefood = 6
@@ -387,7 +387,7 @@ function love.load()
         v.job = "energy"
         -- v.x = love.math.random(610,867)
         -- v.y = love.math.random(435,love.graphics.getHeight() - 40)
-        v:setPath(love.math.random(610,867),love.math.random(435,love.graphics.getHeight() - 40))
+        v:setPath(love.math.random(610,877),love.math.random(435,love.graphics.getHeight() - 40))
       end
     end
   end)

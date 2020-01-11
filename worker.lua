@@ -62,6 +62,14 @@ function Worker:update(isNewClick)
       self.job = "food"
     end
   elseif self.onPath == false then -- in contract pool
+    if self.dx == 0 then
+      self.dx = love.math.random(1,2)
+      if self.dx == 2 then self.dx = -1 end
+    end
+    if self.dy == 0 then
+      self.dy = love.math.random(1,2)
+      if self.dy == 2 then self.dy = -1 end
+    end
     self.x = self.x + self.dx*self.speed
     self.y = self.y + self.dy*self.speed
     if self.x < 690 then
