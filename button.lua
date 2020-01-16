@@ -17,10 +17,12 @@ end
 
 function Button:draw(newClick)
   if self.shown == true then
-    if love.mouse.getX() >= self.x and
-       love.mouse.getX() <= self.x + self.w and
-       love.mouse.getY() >= self.y and
-       love.mouse.getY() <= self.y + self.h
+    mx, my = love.mouse.getPosition()
+    mx, my = mx + camera.x, my + camera.y
+    if mx >= self.x and
+       mx <= self.x + self.w and
+       my >= self.y and
+       my <= self.y + self.h
     then--draw pressed button if cursor is over button
       self.c = {0.8,0.8,0.8}
 
@@ -44,9 +46,11 @@ function Button:draw(newClick)
     love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
     love.graphics.setColor(0,0,0)
 
+    --some special settings for different kinds of buttons
     if self.name == "+" or self.name == "-" then
       love.graphics.printf(self.name, self.x, self.y + 2, self.w, "center")
       mx, my = love.mouse.getPosition()
+      mx, my = mx + camera.x, my + camera.y
       if mx >= self.x and
          mx <= self.x + self.w and
          my >= self.y and
@@ -54,12 +58,19 @@ function Button:draw(newClick)
       then
         love.graphics.setColor(1,1,1)
         --print twice because it wont show up thick enough
-        love.graphics.print("need " .. self.pricelabel .. " food", self.x + 22, self.y + 2)
-        love.graphics.print("need " .. self.pricelabel .. " food", self.x + 22, self.y + 2)
+        local x = 705
+        local y = 75
+        if roaminganimals > 0 and showContractHelp == false then
+          x = 705
+          y = 95
+        end
+        love.graphics.print("need " .. self.pricelabel .. " food", x, y)
+        love.graphics.print("need " .. self.pricelabel .. " food", x, y)
       end
     elseif self.name == "?" then
       love.graphics.printf(self.name, self.x, self.y + 2, self.w, "center")
       mx, my = love.mouse.getPosition()
+      mx, my = mx + camera.x, my + camera.y
       if mx >= self.x and
          mx <= self.x + self.w and
          my >= self.y and
@@ -72,6 +83,7 @@ function Button:draw(newClick)
     elseif self.name == "v" or self.name == "^" or self.name == ">" or self.name == "<" then --the movement buttons
       love.graphics.printf(self.name, self.x, self.y + 2, self.w, "center")
       mx, my = love.mouse.getPosition()
+      mx, my = mx + camera.x, my + camera.y
       if mx >= self.x and
          mx <= self.x + self.w and
          my >= self.y and
@@ -82,19 +94,6 @@ function Button:draw(newClick)
         love.graphics.print(self.pricelabel, 620, 358)
         love.graphics.print(self.pricelabel, 620, 358)
       end
-    -- elseif self.name == ">" or self.name == "<" then --the movement buttons
-    --   love.graphics.printf(self.name, self.x, self.y + 2, self.w, "center")
-    --   mx, my = love.mouse.getPosition()
-    --   if mx >= self.x and
-    --      mx <= self.x + self.w and
-    --      my >= self.y and
-    --      my <= self.y + self.h
-    --   then
-    --     love.graphics.setColor(1,1,1)
-    --     --print twice because it wont show up thick enough
-    --     love.graphics.print(self.pricelabel, 740, 356)
-    --     love.graphics.print(self.pricelabel, 740, 356)
-    --   end
     else
       love.graphics.printf(self.name, self.x + 10, self.y + 10, self.w - 15, "left")
       love.graphics.setColor(1,1,1)

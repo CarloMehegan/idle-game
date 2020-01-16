@@ -30,6 +30,7 @@ function Worker:update(isNewClick)
   end
 
   local mx, my = love.mouse.getPosition()
+  mx, my = mx + camera.x, my + camera.y
 
   if mx > self.x and
     mx < self.x + self.w and
@@ -76,8 +77,8 @@ function Worker:update(isNewClick)
       self.x = 690
       self.dx = -self.dx
     end
-    if self.x + self.w > love.graphics.getWidth() - 5 then
-      self.x = love.graphics.getWidth() - 5 - self.w
+    if self.x + self.w > 1200 then
+      self.x = 1200 - self.w
       self.dx = -self.dx
     end
     if self.y < 65 then

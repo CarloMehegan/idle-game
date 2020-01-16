@@ -17,6 +17,7 @@ local Button = require "button"
 local Cooldown = require "cooldown"
 local Msg = require "messages"
 local Worker = require "worker"
+local Camera = require "camera"
 
 function love.load()
   love.window.setMode(1200, 820, {resizable = true, minwidth=800, minheight=600}) --sets size of window
@@ -29,20 +30,22 @@ function love.load()
   buttonfont = love.graphics.newFont("nimbusmono-regular.otf", 15)
 
   fullscreen = false
-  lastLeftDown = false
+  lastLeftDown = false -- used to make sure mouse clicks arent repeated
   isLeftDown = false
   newClick = false
-  showContractPanels = false
+  showContractPanels = false -- hiding certain screen elements
   showContractHelp = false
+  cameravelx, cameravely = 0, 0 -- The scroll velocity
+  camera.x, camera.y = 0, 0
 
-  energy = 0
-  food = 0
+  energy = 10000000000000000000000000000
+  food = 10000000000000000000000000000
   energyonclick = 1
   minchancefood = 3
   maxchancefood = 6
   producingenergy = 0
   producingfood = 0
-  axolotls = 0
+  axolotls = 1000000
   fennecs = 0
   pangolins = 0
   kittens = 0
@@ -319,7 +322,7 @@ function love.load()
         v.job = "energy"
         -- v.x = love.math.random(610,867)
         -- v.y = love.math.random(435,love.graphics.getHeight() - 40)
-        v:setPath(love.math.random(610,867),love.math.random(435,love.graphics.getHeight() - 40))
+        v:setPath(love.math.random(610,867),love.math.random(435,800 - 40))
       end
     end
   end)
@@ -333,7 +336,7 @@ function love.load()
         v.job = ""
         -- v.x = love.math.random(690, love.graphics.getWidth() - 5 - v.w)
         -- v.y = love.math.random(65, 345 - v.h)
-        v:setPath(love.math.random(690, love.graphics.getWidth() - 5 - v.w),love.math.random(65, 345 - v.h))
+        v:setPath(love.math.random(690, 1200 - 5 - v.w),love.math.random(65, 345 - v.h))
       end
     end
   end)
@@ -346,7 +349,7 @@ function love.load()
         v.job = "food"
         -- v.x = love.math.random(907,1164)
         -- v.y = love.math.random(435,love.graphics.getHeight() - 40)
-        v:setPath(love.math.random(907,1164),love.math.random(435,love.graphics.getHeight() - 40))
+        v:setPath(love.math.random(915,1164),love.math.random(435,800 - 40))
       end
     end
   end)
@@ -360,7 +363,7 @@ function love.load()
         v.job = "food"
         -- v.x = love.math.random(907,1164)
         -- v.y = love.math.random(435,love.graphics.getHeight() - 40)
-        v:setPath(love.math.random(907,1164),love.math.random(435,love.graphics.getHeight() - 40))
+        v:setPath(love.math.random(915,1164),love.math.random(435,800 - 40))
       end
     end
   end)
@@ -374,7 +377,7 @@ function love.load()
         v.job = ""
         -- v.x = love.math.random(690, love.graphics.getWidth() - 5 - v.w)
         -- v.y = love.math.random(65, 345 - v.h)
-        v:setPath(love.math.random(690, love.graphics.getWidth() - 5 - v.w),love.math.random(65, 345 - v.h))
+        v:setPath(love.math.random(690, 1200 - 5 - v.w),love.math.random(65, 345 - v.h))
       end
     end
   end)
@@ -387,7 +390,7 @@ function love.load()
         v.job = "energy"
         -- v.x = love.math.random(610,867)
         -- v.y = love.math.random(435,love.graphics.getHeight() - 40)
-        v:setPath(love.math.random(610,877),love.math.random(435,love.graphics.getHeight() - 40))
+        v:setPath(love.math.random(610,860),love.math.random(435,800 - 40))
       end
     end
   end)
@@ -485,9 +488,20 @@ function love.update(dt)
   buttons["f_hire_all"].shown = showContractPanels
   buttons["f_fire_all"].shown = showContractPanels
   buttons["moveto_energy"].shown = showContractPanels
+
+  -- move with scroll
+  camera:move(cameravelx*dt, cameravely*dt)
+  -- Gradually reduce the velocity to create smooth scrolling effect.
+  cameravelx = cameravelx - cameravelx * math.min( dt * 10, 1 )
+  cameravely = cameravely - cameravely * math.min( dt * 10, 1 )
+  --restrict camera
+  camera:checkBorderCollision(2000,1200)
+
 end
 
 function love.draw()
+  camera:set()
+
   love.graphics.setFont(buttonfont)
   for k,v in pairs(buttons) do
     buttons[k]:draw(newClick)
@@ -498,6 +512,7 @@ function love.draw()
 
   love.graphics.setFont(menufont)
   local mx, my = love.mouse.getPosition()
+  mx, my = mx + camera.x, my + camera.y
   for k,v in pairs(workers) do
     workers[k]:draw(mx,my)
   end
@@ -570,10 +585,13 @@ function love.draw()
   love.graphics.print("gather", 330, 20,0,2)
   love.graphics.print("make", 485, 20,0,2)
 
+
   if showContractPanels then
+    love.graphics.line(690, 60, 690, 350)
     love.graphics.line(605, 0, 605, 1200)
     love.graphics.print("contract", 630, 20,0,2)
     love.graphics.line(606, 350, 2000, 350)
+    love.graphics.line(0, 800, 1200, 800)
     love.graphics.print("energy", 620, 370,0,2)
     if producingenergy > 0 then
       if producingenergy > 1000000 then
@@ -591,36 +609,41 @@ function love.draw()
         love.graphics.print("producing " .. producingfood .. " food/sec", 917, 410,0,1)
       end
     end
-    love.graphics.line(1205, 350, 1205, 1200)
+    love.graphics.line(1205, 0, 1205, 1200)
     if roaminganimals > 0 then
       -- love.graphics.printf(roaminganimals, x, y, limit, align, r, sx, sy, ox, oy, kx, ky)roaminganimals
     end
     if roaminganimals > 0 and showContractHelp == false then
-      local x = 620
+      local x = 705
       local y = 75
       if axolotls > 0 then
         x = 800
       end
       if roaminganimals > 1000000 then
-        love.graphics.print(string.format("roaming animal strength: %.3e", roaminganimals), x, y,0,1)
+        love.graphics.print(string.format("roaming animal strength: %.3e", roaminganimals), 705, 75,0,1)
       else
-        love.graphics.print("roaming animal strength: " .. roaminganimals, x, y,0,1)
+        love.graphics.print("roaming animal strength: " .. roaminganimals, 705, 75,0,1)
       end
     end
+
   end
 
 
   love.graphics.setFont(buttonfont)
   if showContractHelp then
-    love.graphics.printf("This is where you hire animals to help you. Once hired, drag them into the energy or food columns to assign them to those jobs. Animals left roaming with no jobs will aid you when you manually gather resources.", 800, 75, 200)
+    love.graphics.printf("This is where you hire animals to help you. Once hired, drag them into the boxes below to assign them to those jobs. Animals left roaming with no jobs will follow you when you manually gather resources.\nThe \"roaming animal strength\" shows the bonus they give you.", 800, 75, 200)
   end
 
-  -- local mx, my = love.mouse.getPosition()
-  -- love.graphics.print(mx .. ", " .. my, mx, my+20)
+  local mx, my = love.mouse.getPosition()
+  mx, my = mx + camera.x, my + camera.y
+  love.graphics.print(mx .. ", " .. my, mx, my+20)
 
   for k,v in pairs(messages) do
     messages[k]:draw()
   end
+
+  camera:unset()
+
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -636,4 +659,9 @@ function love.keypressed(key, scancode, isrepeat)
       fullscreen = false
     end
   end
+end
+
+function love.wheelmoved( dx, dy )
+    cameravelx = cameravelx + dx * 200
+    cameravely = cameravely - dy * 200
 end

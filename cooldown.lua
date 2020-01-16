@@ -31,10 +31,12 @@ end
 
 function Cooldown:draw()
   if self.isMaxed  == false then
-    if love.mouse.getX() >= self.x and
-       love.mouse.getX() <= self.x + self.w and
-       love.mouse.getY() >= self.y and
-       love.mouse.getY() <= self.y + self.h
+    mx, my = love.mouse.getPosition()
+    mx, my = mx + camera.x, my + camera.y
+    if mx >= self.x and
+       mx <= self.x + self.w and
+       my >= self.y and
+       my <= self.y + self.h
     then--draw pressed button if cursor is over button
       self.c = {0.8,0.8,0.8}
       if love.mouse.isDown(1) and self.leftdown == false and self.cooling == false then
