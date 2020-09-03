@@ -38,14 +38,14 @@ function love.load()
   cameravelx, cameravely = 0, 0 -- The scroll velocity
   camera.x, camera.y = 0, 0
 
-  energy = 10000000000000000000000000000
-  food = 10000000000000000000000000000
+  energy = 0
+  food = 0
   energyonclick = 1
   minchancefood = 3
   maxchancefood = 6
   producingenergy = 0
   producingfood = 0
-  axolotls = 1000000
+  axolotls = 0
   fennecs = 0
   pangolins = 0
   kittens = 0
@@ -634,9 +634,9 @@ function love.draw()
     love.graphics.printf("This is where you hire animals to help you. Once hired, drag them into the boxes below to assign them to those jobs. Animals left roaming with no jobs will follow you when you manually gather resources.\nThe \"roaming animal strength\" shows the bonus they give you.", 800, 75, 200)
   end
 
-  local mx, my = love.mouse.getPosition()
-  mx, my = mx + camera.x, my + camera.y
-  love.graphics.print(mx .. ", " .. my, mx, my+20)
+  -- local mx, my = love.mouse.getPosition()
+  -- mx, my = mx + camera.x, my + camera.y
+  -- love.graphics.print(mx .. ", " .. my, mx, my+20)
 
   for k,v in pairs(messages) do
     messages[k]:draw()
